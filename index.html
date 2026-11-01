@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>漫画本棚 - 読書進捗管理</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>📚 漫画本棚</h1>
+    <div class="stats" id="stats"></div>
+    <div class="header-actions">
+      <button type="button" class="btn ghost" id="exportBtn">エクスポート</button>
+      <label class="btn ghost">
+        インポート<input type="file" id="importInput" accept="application/json" hidden />
+      </label>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <section class="panel">
+        <h2>漫画を追加</h2>
+        <form id="addForm" autocomplete="off">
+          <label class="field">
+            <span>タイトル</span>
+            <input type="text" id="addTitle" placeholder="例: ハイキュー!!" required />
+          </label>
+          <div id="addPreview" class="preview"></div>
+          <div class="field-row">
+            <label class="field">
+              <span>既刊（巻）</span>
+              <input type="number" id="addTotal" min="0" value="1" />
+            </label>
+            <label class="field">
+              <span>読んだ巻</span>
+              <input type="number" id="addRead" min="0" value="0" />
+            </label>
+          </div>
+          <label class="check"><input type="checkbox" id="addCompleted" /> 完結済み</label>
+          <button type="submit" class="btn primary block">追加する</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>タグで絞り込み</h2>
+          <button type="button" class="link" id="clearFilters">クリア</button>
+        </div>
+        <p class="hint">同じ分類内は「どれか」、分類をまたぐと「すべて」に一致する漫画を表示します。</p>
+        <div id="filters"></div>
+      </section>
+    </aside>
+
+    <section class="content">
+      <div class="toolbar">
+        <input type="search" id="search" placeholder="タイトル・タグで検索" />
+        <select id="sort">
+          <option value="updated">更新が新しい順</option>
+          <option value="title">タイトル順</option>
+          <option value="progress">進捗が高い順</option>
+          <option value="progressAsc">進捗が低い順</option>
+          <option value="unread">未読巻が多い順</option>
+        </select>
+      </div>
+      <div id="activeFilters" class="active-filters"></div>
+      <div id="list" class="manga-list"></div>
+    </section>
+  </main>
+
+  <dialog id="editDialog">
+    <form method="dialog" id="editForm" autocomplete="off">
+      <h2>漫画を編集</h2>
+      <label class="field">
+        <span>タイトル</span>
+        <input type="text" id="editTitle" required />
+      </label>
+      <div class="field-row">
+        <label class="field">
+          <span>既刊（巻）</span>
+          <input type="number" id="editTotal" min="0" />
+        </label>
+        <label class="field">
+          <span>読んだ巻</span>
+          <input type="number" id="editRead" min="0" />
+        </label>
+      </div>
+      <label class="check"><input type="checkbox" id="editCompleted" /> 完結済み</label>
+      <label class="field">
+        <span>掲載誌（選ぶと出版社・系列・対象を自動設定）</span>
+        <select id="editMagazine"></select>
+      </label>
+      <div id="editTags"></div>
+      <label class="field">
+        <span>メモ</span>
+        <textarea id="editMemo" rows="2"></textarea>
+      </label>
+      <div class="dialog-actions">
+        <button type="button" class="btn ghost" id="reclassifyBtn">タイトルから再分類</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn ghost" id="cancelEdit">キャンセル</button>
+        <button type="submit" class="btn primary" id="saveEdit">保存</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="js/dictionary.js"></script>
+  <script src="js/classifier.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
